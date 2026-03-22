@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warum frierst du? — Thermische Behaglichkeit erklärt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,800;0,900;1,800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cold:#3b9edd; --cool:#6ec6a0; --ok:#2d8a5e;
+  --warm:#f0834a; --hot:#d63b2f;
+  --bg:#fffdf7; --ink:#1a1612; --ink2:#6b6460;
+  --white:#ffffff; --border:#e8e2d8;
+  --r:16px; --max:860px;
+  --f:'Nunito',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;background:linear-gradient(160deg,#fff9ee 0%,#ffecd2 60%,#ffd4b8 100%);position:relative;overflow:hidden;}
+.hero-body{position:relative;z-index:1;max-width:640px;}
+.hero-emoji{font-size:clamp(60px,12vw,96px);line-height:1;margin-bottom:16px;display:block;animation:wobble 3s ease-in-out infinite;}
+@keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+.hero h1{font-size:clamp(30px,7vw,60px);font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:20px;}
+.hero h1 span{color:var(--warm);}
+.hero-sub{font-size:clamp(15px,2.5vw,19px);color:var(--ink2);margin-bottom:36px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto;}
+.scroll-hint{font-size:14px;font-weight:700;color:var(--ink2);letter-spacing:0.05em;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.scroll-arrow{font-size:22px;animation:bounce 1.5s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+.temp-strip{height:6px;background:linear-gradient(90deg,var(--cold),var(--cool),#b6e890,#f5c842,var(--warm),var(--hot));position:sticky;top:0;z-index:200;}
+
+.section{max-width:var(--max);margin:0 auto;padding:64px 24px;}
+.section+.section{border-top:2px dashed var(--border);}
+.chip{display:inline-block;font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:999px;background:#f5c842;color:var(--ink);margin-bottom:18px;}
+h2{font-size:clamp(24px,5vw,42px);font-weight:900;letter-spacing:-0.02em;line-height:1.1;margin-bottom:14px;}
+h2 em{font-style:italic;color:var(--warm);}
+.lead{font-size:17px;color:var(--ink2);max-width:580px;margin-bottom:28px;line-height:1.6;}
+
+/* HEAT GRID */
+.heat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:24px;}
+.hc{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:22px 18px;text-align:center;}
+.hc-pct{font-size:40px;font-weight:900;line-height:1;margin-bottom:4px;}
+.hc h3{font-size:14px;font-weight:800;margin-bottom:6px;}
+.hc p{font-size:13px;color:var(--ink2);line-height:1.5;margin:0;}
+
+/* FACTOR CARDS */
+.factors{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:24px;}
+.fc{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:20px 18px;transition:transform 0.2s,box-shadow 0.2s;}
+.fc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,0.07);}
+.fc-emoji{font-size:30px;margin-bottom:10px;display:block;}
+.fc-type{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.fc h3{font-size:15px;font-weight:800;margin-bottom:6px;}
+.fc p{font-size:13px;color:var(--ink2);line-height:1.5;margin:0;}
+.fc-unit{font-family:var(--mono);font-size:11px;margin-top:10px;padding:3px 8px;border-radius:6px;display:inline-block;background:var(--bg);border:1px solid var(--border);}
+.env{border-top:4px solid var(--cold);}
+.env .fc-type{color:var(--cold);}
+.pers{border-top:4px solid var(--warm);}
+.pers .fc-type{color:var(--warm);}
+
+/* PMV SKALA */
+.pmv-explain{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:24px 0;}
+.pmv-step{border-radius:12px;padding:14px 8px;text-align:center;}
+.pmv-step-num{font-family:var(--mono);font-size:20px;font-weight:900;margin-bottom:5px;}
+.pmv-step-emoji{font-size:22px;margin-bottom:5px;display:block;}
+.pmv-step-lbl{font-size:10px;font-weight:700;line-height:1.3;}
+@media(max-width:560px){.pmv-explain{grid-template-columns:repeat(4,1fr)}.pmv-step:nth-child(n+5){display:none;}}
+
+/* FUN FACTS */
+.fun-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:28px;}
+.ff{border-radius:var(--r);padding:22px 20px;border:2px solid transparent;}
+.ff-a{background:#fff8e1;border-color:#ffe082;}
+.ff-b{background:#e8f5e9;border-color:#a5d6a7;}
+.ff-c{background:#e3f2fd;border-color:#90caf9;}
+.ff-d{background:#fce4ec;border-color:#f48fb1;}
+.ff-big{font-size:38px;font-weight:900;line-height:1;margin-bottom:8px;}
+.ff h3{font-size:15px;font-weight:800;margin-bottom:5px;}
+.ff p{font-size:13px;color:var(--ink2);line-height:1.5;margin:0;}
+
+/* RECHNER */
+.rechner-wrap{max-width:var(--max);margin:0 auto;padding:0 24px 80px;}
+.rechner{background:linear-gradient(135deg,#1a1612 0%,#2d2420 100%);border-radius:24px;padding:40px 32px;color:var(--white);}
+.rechner .chip{background:#f5c842;color:var(--ink);}
+.rechner h2{color:var(--white);}
+.rechner h2 em{color:#f5c842;}
+.rechner .lead{color:rgba(255,255,255,0.6);max-width:600px;}
+.result-box{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;margin:24px 0;text-align:center;}
+.pmv-big{font-size:88px;font-weight:900;line-height:1;letter-spacing:-0.04em;transition:color 0.4s;margin-bottom:6px;}
+.pmv-lbl{font-size:17px;font-weight:800;transition:color 0.4s;margin-bottom:4px;}
+.pmv-sub{font-size:13px;color:rgba(255,255,255,0.4);}
+.pmv-emo{font-size:44px;display:block;margin-bottom:10px;}
+.scale-bar{height:20px;border-radius:10px;position:relative;background:linear-gradient(90deg,#3b9edd,#6ec6a0,#b6e890,#f5c842,#f0834a,#d63b2f);margin-top:18px;}
+.scale-needle{position:absolute;top:-8px;width:5px;height:36px;background:#fff;border-radius:3px;transform:translateX(-50%);box-shadow:0 2px 10px rgba(0,0,0,0.4);transition:left 0.5s cubic-bezier(.34,1.56,.64,1);}
+.scale-zone{position:absolute;top:0;left:calc(50% - 8.33%);width:16.67%;height:100%;border:3px solid rgba(255,255,255,0.65);border-radius:10px;background:rgba(255,255,255,0.12);}
+.scale-ticks{display:flex;justify-content:space-between;margin-top:5px;}
+.scale-ticks span{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,0.35);}
+.ppd-row{display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);}
+.ppd-big{font-size:36px;font-weight:900;font-family:var(--mono);min-width:72px;transition:color 0.4s;}
+.ppd-info{flex:1;}
+.ppd-txt{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:7px;}
+.ppd-bg{height:9px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;}
+.ppd-fill{height:100%;background:linear-gradient(90deg,#6ec6a0,#f0834a,#d63b2f);border-radius:5px;transition:width 0.5s;}
+
+/* ISO CATS */
+.iso-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px;}
+@media(max-width:500px){.iso-cats{grid-template-columns:repeat(2,1fr);}}
+.iso-cat{border-radius:12px;padding:12px;text-align:center;border:2px solid rgba(255,255,255,0.1);transition:all 0.3s;}
+.iso-cat.lit{border-color:#f5c842;background:rgba(245,200,66,0.12);}
+.iso-cat-lbl{font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;}
+.iso-cat.lit .iso-cat-lbl{color:#f5c842;}
+.iso-cat-range{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.iso-cat-ppd{font-size:11px;color:rgba(255,255,255,0.35);}
+
+/* SLIDERS */
+.sl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px;}
+@media(max-width:580px){.sl-grid{grid-template-columns:1fr;}}
+.sl-grp{background:rgba(255,255,255,0.05);border-radius:14px;padding:18px;}
+.sl-grp-ttl{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:14px;}
+.sl-row{margin-bottom:16px;}
+.sl-row:last-child{margin-bottom:0;}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.sl-lbl{font-size:14px;font-weight:700;color:var(--white);}
+.sl-val{font-family:var(--mono);font-size:14px;font-weight:600;color:#f5c842;min-width:68px;text-align:right;}
+input[type=range]{width:100%;height:5px;accent-color:#f5c842;cursor:pointer;margin:0;}
+.sl-mm{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.2);font-family:var(--mono);margin-top:3px;}
+.sl-ctx{font-size:11px;color:rgba(255,255,255,0.3);font-family:var(--mono);margin-top:2px;}
+
+/* PRESETS */
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.pbtn{font-family:var(--f);font-size:13px;font-weight:700;padding:7px 15px;border-radius:999px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);cursor:pointer;transition:all 0.15s;}
+.pbtn:hover{border-color:#f5c842;color:#f5c842;background:rgba(245,200,66,0.1);}
+.pbtn.active{background:#f5c842;color:var(--ink);border-color:#f5c842;}
+
+/* PPD CANVAS */
+canvas{width:100%;display:block;border-radius:10px;}
+
+/* NORMEN */
+.normen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:24px;}
+.norm-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:20px 18px;}
+.norm-card h3{font-size:14px;font-weight:800;margin-bottom:6px;}
+.norm-card p{font-size:13px;color:var(--ink2);line-height:1.5;margin:0;}
+.ntag{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:10px;}
+.n-iso{background:#e8f4fd;color:#1a6fad;}
+.n-din{background:#e8f7ef;color:#1a6e40;}
+.n-eu{background:#fdf4e8;color:#8a5a00;}
+.n-de{background:#fde8e8;color:#8a1a1a;}
+
+/* GLOSSAR */
+.glos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:22px;}
+.gi{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.gi-term{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--warm);margin-bottom:3px;}
+.gi-def{font-size:13px;color:var(--ink2);line-height:1.4;}
+
+/* CALLOUT */
+.callout{background:#fff8e1;border:2px solid #ffe082;border-radius:var(--r);padding:18px 22px;margin-top:20px;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s;}
+.reveal.visible{opacity:1;transform:none;}
+
+.footer{background:var(--ink);color:rgba(255,255,255,0.45);text-align:center;padding:28px 24px;font-size:13px;line-height:1.8;}
+.footer a{color:rgba(255,255,255,0.65);text-decoration:none;}
+
+@media(max-width:480px){.rechner{padding:24px 16px;}.pmv-big{font-size:68px;}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-body">
+    <span class="hero-emoji" id="hero-emoji">🥶</span>
+    <h1>Warum frierst du,<br>wenn jemand anderes <span>schwitzt?</span></h1>
+    <p class="hero-sub">
+      Dasselbe Zimmer, dieselbe Temperatur — und trotzdem fühlt sich einer zu warm an und der andere zu kalt.
+      Das ist keine Einbildung. Das ist Physik. Und sie hat einen Namen.
+    </p>
+    <div class="scroll-hint">
+      <span>Scroll zum Entdecken</span>
+      <span class="scroll-arrow">↓</span>
+    </div>
+  </div>
+</section>
+
+<div class="temp-strip"></div>
+
+<!-- 1: WARUM -->
+<div class="section reveal">
+  <div class="chip">🔥 Dein Körper</div>
+  <h2>Dein Körper ist eine <em>Heizung</em></h2>
+  <p class="lead">Egal ob du schläfst oder Sport machst — dein Körper produziert ständig Wärme. Diese Wärme muss irgendwohin. Wenn das gut klappt, fühlst du dich wohl. Wenn nicht, frierst oder schwitzt du.</p>
+  <div class="heat-grid">
+    <div class="hc reveal"><div class="hc-pct" style="color:#d63b2f">~40%</div><h3>🌡️ Strahlung</h3><p>Dein Körper strahlt Wärme ab wie eine Herdplatte. Kalte Wände kühlen dich, auch wenn die Luft warm ist.</p></div>
+    <div class="hc reveal"><div class="hc-pct" style="color:#f0834a">~30%</div><h3>💨 Konvektion</h3><p>Die Luft um dich nimmt Wärme auf. Zugluft beschleunigt das — darum friert man beim Durchzug.</p></div>
+    <div class="hc reveal"><div class="hc-pct" style="color:#3b9edd">~25%</div><h3>💧 Verdunstung</h3><p>Schweiß verdunstet und kühlt dich. Bei feuchter Luft klappt das schlechter — deshalb ist schwüle Hitze unangenehmer.</p></div>
+    <div class="hc reveal"><div class="hc-pct" style="color:#9a9590">~5%</div><h3>🪑 Kontakt</h3><p>Direktberührung mit Flächen. Ein Holzstuhl fühlt sich wärmer an als Metall bei gleicher Temperatur.</p></div>
+  </div>
+</div>
+
+<!-- 2: 6 FAKTOREN -->
+<div class="section reveal">
+  <div class="chip">📐 Die 6 Faktoren</div>
+  <h2>Sechs Dinge bestimmen, <em>wie wohl du dich fühlst</em></h2>
+  <p class="lead">Nicht die Lufttemperatur allein entscheidet. Immer sind es genau sechs Faktoren zusammen. Vier kommen aus dem Raum — zwei von dir selbst.</p>
+  <div class="factors">
+    <div class="fc env reveal"><span class="fc-emoji">🌡️</span><div class="fc-type">Raum</div><h3>Lufttemperatur</h3><p>Die Temperatur der Luft — aber nicht der einzige Faktor!</p><span class="fc-unit">t<sub>a</sub> in °C</span></div>
+    <div class="fc env reveal"><span class="fc-emoji">🔆</span><div class="fc-type">Raum</div><h3>Strahlungswärme</h3><p>Wärme von Wänden und Fenstern. Kalte Scheiben kühlen dich, auch wenn die Luft warm ist.</p><span class="fc-unit">t<sub>r</sub> in °C</span></div>
+    <div class="fc env reveal"><span class="fc-emoji">💨</span><div class="fc-type">Raum</div><h3>Luftgeschwindigkeit</h3><p>Zugluft fühlt sich kälter an — auch bei gleicher Temperatur.</p><span class="fc-unit">v in m/s</span></div>
+    <div class="fc env reveal"><span class="fc-emoji">💧</span><div class="fc-type">Raum</div><h3>Luftfeuchtigkeit</h3><p>Feuchte Luft verhindert das Verdunsten von Schweiß. Das macht Hitze schwüler.</p><span class="fc-unit">φ in %</span></div>
+    <div class="fc pers reveal"><span class="fc-emoji">🏃</span><div class="fc-type">Person</div><h3>Aktivität (met)</h3><p>Wer sich bewegt, produziert mehr Wärme. Sitzen = 1 met. Schwerer Sport = bis 10 met.</p><span class="fc-unit">M in met</span></div>
+    <div class="fc pers reveal"><span class="fc-emoji">🧥</span><div class="fc-type">Person</div><h3>Kleidung (clo)</h3><p>Mehr Kleidung = weniger Wärme geht verloren. Sommer ≈ 0,5 clo. Winterjacke ≈ 1,5 clo.</p><span class="fc-unit">I<sub>cl</sub> in clo</span></div>
+  </div>
+  <div class="callout reveal">
+    <strong>💡 Beispiel:</strong> Du sitzt in einem Büro bei 22 °C — direkt neben einem großen Winterfenster. Die Luft ist warm, aber die kalte Scheibe strahlt Kälte ab. Deshalb frierst du, obwohl das Thermometer 22 °C zeigt!
+  </div>
+</div>
+
+<!-- 3: PMV ERKLÄRT -->
+<div class="section reveal">
+  <div class="chip">📊 Der Komfort-Index</div>
+  <h2>Der <em>PMV</em> — eine Zahl für dein Wohlfühlen</h2>
+  <p class="lead">Wissenschaftler Ole Fanger packte 1971 alle sechs Faktoren in eine Formel. Das Ergebnis ist der <strong>PMV</strong> — er sagt voraus, wie sich die meisten Menschen fühlen würden.</p>
+  <div class="pmv-explain">
+    <div class="pmv-step reveal" style="background:#dbeafe;"><div class="pmv-step-num" style="color:#1d4ed8;">−3</div><span class="pmv-step-emoji">🥶</span><div class="pmv-step-lbl" style="color:#1e3a8a;">Sehr kalt</div></div>
+    <div class="pmv-step reveal" style="background:#bfdbfe;"><div class="pmv-step-num" style="color:#1d4ed8;">−2</div><span class="pmv-step-emoji">😰</span><div class="pmv-step-lbl" style="color:#1e40af;">Kalt</div></div>
+    <div class="pmv-step reveal" style="background:#e0f2fe;"><div class="pmv-step-num" style="color:#0284c7;">−1</div><span class="pmv-step-emoji">🙁</span><div class="pmv-step-lbl" style="color:#0c4a6e;">Leicht kalt</div></div>
+    <div class="pmv-step reveal" style="background:#dcfce7;border:3px solid #86efac;"><div class="pmv-step-num" style="color:#16a34a;">0</div><span class="pmv-step-emoji">😊</span><div class="pmv-step-lbl" style="color:#14532d;">Perfekt!</div></div>
+    <div class="pmv-step reveal" style="background:#fef3c7;"><div class="pmv-step-num" style="color:#d97706;">+1</div><span class="pmv-step-emoji">😅</span><div class="pmv-step-lbl" style="color:#92400e;">Leicht warm</div></div>
+    <div class="pmv-step reveal" style="background:#fed7aa;"><div class="pmv-step-num" style="color:#ea580c;">+2</div><span class="pmv-step-emoji">🥵</span><div class="pmv-step-lbl" style="color:#7c2d12;">Warm</div></div>
+    <div class="pmv-step reveal" style="background:#fecaca;"><div class="pmv-step-num" style="color:#dc2626;">+3</div><span class="pmv-step-emoji">🔥</span><div class="pmv-step-lbl" style="color:#7f1d1d;">Sehr heiß</div></div>
+  </div>
+  <div class="fun-facts">
+    <div class="ff ff-a reveal"><div class="ff-big">5%</div><h3>Immer unzufrieden</h3><p>Selbst bei PMV = 0 fühlen sich 5 % unwohl. Menschen sind verschieden — das lässt sich nicht ändern!</p></div>
+    <div class="ff ff-b reveal"><div class="ff-big">26%</div><h3>Schon bei PMV = ±1</h3><p>Wenn PMV auf 1 steigt, sind bereits 26 von 100 Menschen unzufrieden. Die Kurve steigt schnell!</p></div>
+    <div class="ff ff-c reveal"><div class="ff-big">1371</div><h3>Testpersonen</h3><p>Fanger testete seine Gleichung in Klimakammern mit über 1000 echten Menschen.</p></div>
+    <div class="ff ff-d reveal"><div class="ff-big">±0,5</div><h3>Die Komfortzone</h3><p>ISO 7730 empfiehlt PMV zwischen −0,5 und +0,5 für Büros und Schulen.</p></div>
+  </div>
+</div>
+
+<!-- 4: RECHNER -->
+<div class="rechner-wrap">
+<div class="rechner reveal">
+  <div class="chip">🎮 Selbst ausprobieren</div>
+  <h2>Berechne deinen <em>eigenen PMV</em></h2>
+  <p class="lead">Stell die Regler ein und schau live, wie sich dein Komfort verändert. Probiere die Szenarien!</p>
+
+  <div class="result-box">
+    <span class="pmv-emo" id="pmv-emo">😊</span>
+    <div class="pmv-big" id="pmv-num" style="color:#4ade80;">0.0</div>
+    <div class="pmv-lbl" id="pmv-lbl" style="color:#4ade80;">Perfekter Komfort</div>
+    <div class="pmv-sub">PMV nach Fanger (1971) / ISO 7730</div>
+    <div class="scale-bar" style="margin-top:18px;">
+      <div class="scale-zone"></div>
+      <div class="scale-needle" id="needle" style="left:50%"></div>
+    </div>
+    <div class="scale-ticks"><span>−3</span><span>−2</span><span>−1</span><span>0</span><span>+1</span><span>+2</span><span>+3</span></div>
+    <div class="ppd-row">
+      <div><div style="font-size:10px;font-family:var(--mono);color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;">PPD</div><div class="ppd-big" id="ppd-num" style="color:#4ade80;">5%</div></div>
+      <div class="ppd-info">
+        <div class="ppd-txt" id="ppd-txt">5 von 100 Menschen fühlen sich unwohl — das unvermeidbare Minimum.</div>
+        <div class="ppd-bg"><div class="ppd-fill" id="ppd-fill" style="width:5%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="iso-cats">
+    <div class="iso-cat" id="nc-I"><div class="iso-cat-lbl">Kat. I</div><div class="iso-cat-range">−0.2…+0.2</div><div class="iso-cat-ppd">PPD &lt;6%</div></div>
+    <div class="iso-cat lit" id="nc-II"><div class="iso-cat-lbl">Kat. II</div><div class="iso-cat-range">−0.5…+0.5</div><div class="iso-cat-ppd">PPD &lt;10%</div></div>
+    <div class="iso-cat" id="nc-III"><div class="iso-cat-lbl">Kat. III</div><div class="iso-cat-range">−0.7…+0.7</div><div class="iso-cat-ppd">PPD &lt;15%</div></div>
+    <div class="iso-cat" id="nc-IV"><div class="iso-cat-lbl">Außerhalb</div><div class="iso-cat-range">&lt;−0.7/&gt;+0.7</div><div class="iso-cat-ppd">PPD ≥15%</div></div>
+  </div>
+
+  <div class="sl-grid">
+    <div class="sl-grp">
+      <div class="sl-grp-ttl">🏠 Raum</div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">🌡️ Lufttemperatur</span><span class="sl-val" id="v-ta">22 °C</span></div><input type="range" min="10" max="40" step="0.5" value="22" id="s-ta" oninput="calc()"><div class="sl-mm"><span>10°C</span><span>40°C</span></div></div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">🔆 Strahlungstemp.</span><span class="sl-val" id="v-tr">22 °C</span></div><input type="range" min="10" max="40" step="0.5" value="22" id="s-tr" oninput="calc()"><div class="sl-mm"><span>10°C (kaltes Fenster)</span><span>40°C</span></div></div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">💨 Luftgeschwindigkeit</span><span class="sl-val" id="v-va">0.1 m/s</span></div><input type="range" min="0" max="1.5" step="0.05" value="0.1" id="s-va" oninput="calc()"><div class="sl-mm"><span>0 (still)</span><span>1.5 m/s (Wind)</span></div></div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">💧 Luftfeuchtigkeit</span><span class="sl-val" id="v-rh">50%</span></div><input type="range" min="10" max="90" step="1" value="50" id="s-rh" oninput="calc()"><div class="sl-mm"><span>10% (trocken)</span><span>90% (schwül)</span></div></div>
+    </div>
+    <div class="sl-grp">
+      <div class="sl-grp-ttl">🧍 Person</div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">🏃 Aktivität</span><span class="sl-val" id="v-met">1.2 met</span></div><input type="range" min="0.8" max="4" step="0.1" value="1.2" id="s-met" oninput="calc()"><div class="sl-mm"><span>0.8 (schlafen)</span><span>4.0 (Sport)</span></div><div class="sl-ctx" id="met-ctx">→ Bürotätigkeit, sitzen</div></div>
+      <div class="sl-row"><div class="sl-top"><span class="sl-lbl">🧥 Kleidung</span><span class="sl-val" id="v-clo">1.0 clo</span></div><input type="range" min="0" max="2" step="0.05" value="1.0" id="s-clo" oninput="calc()"><div class="sl-mm"><span>0 (nackt)</span><span>2.0 (Wintermantel)</span></div><div class="sl-ctx" id="clo-ctx">→ Hose + Hemd + Jacke</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;">PPD-Kurve nach Fanger — Unzufriedene in %</div>
+    <canvas id="cvs" height="130"></canvas>
+  </div>
+
+  <div style="margin-top:18px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;">🎯 Szenarien</div>
+    <div class="presets">
+      <button class="pbtn active" onclick="setP('ideal',this)">✨ Ideal</button>
+      <button class="pbtn" onclick="setP('buero',this)">🏢 Büro Sommer</button>
+      <button class="pbtn" onclick="setP('fenster',this)">🪟 Kaltes Fenster</button>
+      <button class="pbtn" onclick="setP('sport',this)">⚽ Nach Sport</button>
+      <button class="pbtn" onclick="setP('schule',this)">📚 Schulklasse</button>
+      <button class="pbtn" onclick="setP('sommer',this)">☀️ Heißer Sommer</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 5: NORMEN -->
+<div class="section reveal">
+  <div class="chip">📋 Regeln</div>
+  <h2>Was sagen <em>Normen und Gesetze?</em></h2>
+  <p class="lead">In Deutschland und der EU gibt es klare Regeln, wann ein Raum als „behaglich" gilt.</p>
+  <div class="normen-grid">
+    <div class="norm-card reveal"><span class="ntag n-iso">ISO</span><h3>ISO 7730</h3><p>Die wichtigste internationale Norm. Definiert PMV, PPD und die Behaglichkeitskategorien I–IV. Grundlage für alle anderen Normen.</p></div>
+    <div class="norm-card reveal"><span class="ntag n-din">DIN EN</span><h3>DIN EN 16798-1</h3><p>Europäische Norm für Gebäude. Deutschland: Zugluftrisiko maximal 15 % — strenger als der EU-Standard von 20 %.</p></div>
+    <div class="norm-card reveal"><span class="ntag n-de">Deutschland</span><h3>ASR A3.5</h3><p>Mindesttemperaturen am Arbeitsplatz: Büros mindestens 20 °C, leichte körperliche Arbeit mindestens 19 °C.</p></div>
+    <div class="norm-card reveal"><span class="ntag n-eu">EU</span><h3>EPBD 2024</h3><p>Neue EU-Gebäuderichtlinie. Alle Neubauten ab 2030 klimaneutral. Thermische Behaglichkeit als Planungspflicht.</p></div>
+    <div class="norm-card reveal"><span class="ntag n-de">Deutschland</span><h3>GEG 2024</h3><p>Ab 2024 müssen neue Heizungen zu 65 % aus erneuerbaren Energien betrieben werden.</p></div>
+    <div class="norm-card reveal"><span class="ntag n-iso">ISO</span><h3>ISO 7726 / 8996 / 9920</h3><p>Ergänzende Normen: Wie misst man Strahlungstemperatur, Stoffwechsel und den clo-Wert von Kleidung?</p></div>
+  </div>
+</div>
+
+<!-- 6: GLOSSAR -->
+<div class="section reveal">
+  <div class="chip">📖 Begriffe</div>
+  <h2>Alle <em>Fachbegriffe</em> einfach erklärt</h2>
+  <div class="glos-grid">
+    <div class="gi reveal"><div class="gi-term">PMV</div><div class="gi-def">Predicted Mean Vote — Zahl von −3 bis +3 für das Wärmeempfinden der meisten Menschen</div></div>
+    <div class="gi reveal"><div class="gi-term">PPD</div><div class="gi-def">Predicted Percentage Dissatisfied — Anteil der Menschen (%), die sich bei einem PMV-Wert unwohl fühlen</div></div>
+    <div class="gi reveal"><div class="gi-term">met</div><div class="gi-def">Metabolic Rate — Aktivitätsmaß. 1 met = ruhig sitzen (58 W/m²)</div></div>
+    <div class="gi reveal"><div class="gi-term">clo</div><div class="gi-def">Clothing Insulation — Wärmedämmwert von Kleidung. 1 clo = Winteranzug</div></div>
+    <div class="gi reveal"><div class="gi-term">t_a</div><div class="gi-def">Lufttemperatur — Temperatur der Raumluft in °C</div></div>
+    <div class="gi reveal"><div class="gi-term">t_r</div><div class="gi-def">Mittlere Strahlungstemperatur — Durchschnitt aller umgebenden Flächen (Wände, Fenster, Decke)</div></div>
+    <div class="gi reveal"><div class="gi-term">t_op</div><div class="gi-def">Operative Temperatur — Mittelwert aus Luft- und Strahlungstemperatur. Beschreibt das gefühlte Klima besser.</div></div>
+    <div class="gi reveal"><div class="gi-term">SET</div><div class="gi-def">Standard Effective Temperature — Alternative zu PMV für komplexere Situationen</div></div>
+    <div class="gi reveal"><div class="gi-term">PET</div><div class="gi-def">Physiological Equivalent Temperature — Komfortindex für Außenräume und Stadtplanung</div></div>
+    <div class="gi reveal"><div class="gi-term">UTCI</div><div class="gi-def">Universal Thermal Climate Index — Modernster Außenklima-Index, inkl. Sonne und Wind</div></div>
+    <div class="gi reveal"><div class="gi-term">ISO 7730</div><div class="gi-def">Internationale Norm, die PMV und PPD definiert</div></div>
+    <div class="gi reveal"><div class="gi-term">DIN EN 16798</div><div class="gi-def">Europäische Norm für Innenraumklima in Gebäuden</div></div>
+  </div>
+</div>
+
+<div class="footer">
+  Quellen: ISO 7730:2005/2025 · Fanger (1971) <em>Thermal Comfort</em> · DIN EN 16798-1 (2022) · EPBD 2024/1275/EU · ASR A3.5<br>
+  Erstellt mit <a href="https://claude.ai">Claude (Anthropic)</a>
+</div>
+
+<script>
+// ── PMV / PPD BERECHNUNG (Fanger 1971) ──
+function calcPMV(ta,tr,va,rh,met,clo){
+  const M=met*58.15,W=0,icl=clo*0.155;
+  const fcl=icl>0.078?1.05+0.645*icl:1+1.29*icl;
+  const hcf=2.38*Math.pow(Math.abs(ta-35.5),0.25);
+  const hcv=12.1*Math.sqrt(Math.max(va,0.001));
+  const hc=Math.max(hcf,hcv);
+  let tcl=ta+(35.5-ta)/(3.5*(6.45*icl+0.1));
+  for(let i=0;i<150;i++){
+    const n=35.7-0.028*(M-W)-icl*(3.96e-8*fcl*(Math.pow(tcl+273,4)-Math.pow(tr+273,4))+fcl*hc*(tcl-ta));
+    if(Math.abs(n-tcl)<0.001){tcl=n;break;}tcl=n;
+  }
+  const pa=(rh/100)*Math.exp(16.6536-4030.18/(ta+235));
+  const hl1=3.05e-3*(5733-6.99*(M-W)-pa);
+  const hl2=(M-W)>58.15?0.42*((M-W)-58.15):0;
+  const hl3=1.7e-5*M*(5867-pa);
+  const hl4=0.0014*M*(34-ta);
+  const hl5=3.96e-8*fcl*(Math.pow(tcl+273,4)-Math.pow(tr+273,4));
+  const hl6=fcl*hc*(tcl-ta);
+  const L=M-W-hl1-hl2-hl3-hl4-hl5-hl6;
+  return Math.max(-3,Math.min(3,(0.303*Math.exp(-0.036*M)+0.028)*L));
+}
+function calcPPD(pmv){return Math.min(100,100-95*Math.exp(-(0.03353*Math.pow(pmv,4)+0.2179*Math.pow(pmv,2))));}
+
+const MET_L=[[0.8,'Schlafen'],[1.0,'Entspannen'],[1.2,'Büro, sitzen'],[1.4,'Stehen, leicht'],[1.6,'Gehen 2 km/h'],[2.0,'Gehen 4 km/h'],[2.5,'Leichter Sport'],[3.0,'Radfahren'],[4.0,'Schwerer Sport']];
+const CLO_L=[[0,'Nackt'],[0.1,'Nur Unterwäsche'],[0.3,'Shorts + T-Shirt'],[0.5,'Leichtes Sommeroutfit'],[0.7,'Kurzarmhemd + Hose'],[1.0,'Hemd + Hose + Jacke'],[1.3,'Anzug'],[1.5,'Winterkleidung'],[2.0,'Wintermantel']];
+const nearest=(v,a)=>a.reduce((x,y)=>Math.abs(y[0]-v)<Math.abs(x[0]-v)?y:x)[1];
+
+function pmvColor(p){
+  if(p<=-2)return'#60a5fa';if(p<=-1)return'#93c5fd';if(p<=-0.5)return'#86efac';
+  if(p<=0.5)return'#4ade80';if(p<=1)return'#fde68a';if(p<=2)return'#fb923c';return'#f87171';
+}
+function pmvEmoji(p){
+  if(p<=-2.5)return'🥶';if(p<=-1.5)return'😰';if(p<=-0.5)return'🙁';
+  if(p<=0.5)return'😊';if(p<=1.5)return'😅';if(p<=2.5)return'🥵';return'🔥';
+}
+function pmvLabel(p){
+  if(p<=-2.5)return'Sehr kalt — Zittern beginnt';if(p<=-1.5)return'Kalt — unangenehm';
+  if(p<=-0.5)return'Leicht kühl';if(p<=0.5)return'Perfekter Komfort ✓';
+  if(p<=1.5)return'Leicht warm';if(p<=2.5)return'Warm — unangenehm';return'Sehr heiß — Hitzestress';
+}
+function ppColor(d){if(d<10)return'#4ade80';if(d<20)return'#fde68a';if(d<35)return'#fb923c';return'#f87171';}
+
+function drawCanvas(pmv){
+  const cvs=document.getElementById('cvs');if(!cvs)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=cvs.offsetWidth||600,H=130;
+  cvs.width=W*dpr;cvs.height=H*dpr;
+  const c=cvs.getContext('2d');c.scale(dpr,dpr);
+  const p={l:34,r:14,t:10,b:26},pw=W-p.l-p.r,ph=H-p.t-p.b;
+  c.fillStyle='rgba(255,255,255,0.03)';c.beginPath();c.roundRect(0,0,W,H,8);c.fill();
+  // grid
+  c.strokeStyle='rgba(255,255,255,0.1)';c.lineWidth=0.5;
+  [0,25,50,75,100].forEach(v=>{
+    const y=p.t+ph-(v/100)*ph;
+    c.beginPath();c.moveTo(p.l,y);c.lineTo(p.l+pw,y);c.stroke();
+    c.fillStyle='rgba(255,255,255,0.25)';c.font='9px DM Mono,monospace';
+    c.textAlign='right';c.fillText(v+'%',p.l-4,y+3.5);
+  });
+  // comfort zone
+  const zl=p.l+((-0.5+3)/6)*pw,zr=p.l+((0.5+3)/6)*pw;
+  c.fillStyle='rgba(74,222,128,0.08)';c.fillRect(zl,p.t,zr-zl,ph);
+  // curve
+  const g=c.createLinearGradient(p.l,0,p.l+pw,0);
+  g.addColorStop(0,'#60a5fa');g.addColorStop(0.5,'#4ade80');g.addColorStop(1,'#f87171');
+  c.beginPath();c.strokeStyle=g;c.lineWidth=2.5;
+  for(let i=0;i<=120;i++){
+    const pv=-3+(i/120)*6,ppd=calcPPD(pv);
+    const x=p.l+(i/120)*pw,y=p.t+ph-(ppd/100)*ph;
+    i===0?c.moveTo(x,y):c.lineTo(x,y);
+  }
+  c.stroke();
+  // dot
+  const cx=p.l+((pmv+3)/6)*pw,cy=p.t+ph-(calcPPD(pmv)/100)*ph;
+  c.beginPath();c.arc(cx,cy,6,0,Math.PI*2);c.fillStyle='#fff';c.fill();
+  c.beginPath();c.arc(cx,cy,4,0,Math.PI*2);c.fillStyle=pmvColor(pmv);c.fill();
+  // x labels
+  [-3,-2,-1,0,1,2,3].forEach(v=>{
+    const x=p.l+((v+3)/6)*pw;
+    c.fillStyle='rgba(255,255,255,0.3)';c.font='9px DM Mono,monospace';c.textAlign='center';
+    c.fillText(v>0?'+'+v:v,x,H-7);
+  });
+}
+
+function calc(){
+  const ta=+document.getElementById('s-ta').value;
+  const tr=+document.getElementById('s-tr').value;
+  const va=+document.getElementById('s-va').value;
+  const rh=+document.getElementById('s-rh').value;
+  const met=+document.getElementById('s-met').value;
+  const clo=+document.getElementById('s-clo').value;
+
+  document.getElementById('v-ta').textContent=ta.toFixed(1)+' °C';
+  document.getElementById('v-tr').textContent=tr.toFixed(1)+' °C';
+  document.getElementById('v-va').textContent=va.toFixed(2)+' m/s';
+  document.getElementById('v-rh').textContent=Math.round(rh)+'%';
+  document.getElementById('v-met').textContent=met.toFixed(1)+' met';
+  document.getElementById('v-clo').textContent=clo.toFixed(2)+' clo';
+  document.getElementById('met-ctx').textContent='→ '+nearest(met,MET_L);
+  document.getElementById('clo-ctx').textContent='→ '+nearest(clo,CLO_L);
+
+  const pmv=calcPMV(ta,tr,va,rh,met,clo);
+  const ppd=calcPPD(pmv);
+  const col=pmvColor(pmv);
+
+  document.getElementById('pmv-num').textContent=(pmv>=0?'+':'')+pmv.toFixed(2);
+  document.getElementById('pmv-num').style.color=col;
+  document.getElementById('pmv-lbl').textContent=pmvLabel(pmv);
+  document.getElementById('pmv-lbl').style.color=col;
+  document.getElementById('pmv-emo').textContent=pmvEmoji(pmv);
+  document.getElementById('hero-emoji').textContent=pmvEmoji(pmv);
+  document.getElementById('needle').style.left=((pmv+3)/6*100).toFixed(1)+'%';
+  document.getElementById('ppd-num').textContent=Math.round(ppd)+'%';
+  document.getElementById('ppd-num').style.color=ppColor(ppd);
+  document.getElementById('ppd-fill').style.width=Math.min(100,ppd).toFixed(1)+'%';
+  document.getElementById('ppd-txt').textContent=Math.round(ppd)+' von 100 Menschen würden sich bei diesen Bedingungen unwohl fühlen.';
+
+  ['nc-I','nc-II','nc-III','nc-IV'].forEach(id=>document.getElementById(id).classList.remove('lit'));
+  const ap=Math.abs(pmv);
+  if(ap<=0.2)document.getElementById('nc-I').classList.add('lit');
+  else if(ap<=0.5)document.getElementById('nc-II').classList.add('lit');
+  else if(ap<=0.7)document.getElementById('nc-III').classList.add('lit');
+  else document.getElementById('nc-IV').classList.add('lit');
+
+  drawCanvas(pmv);
+}
+
+const PRESETS={
+  ideal:{ta:22,tr:22,va:0.1,rh:50,met:1.2,clo:1.0},
+  buero:{ta:26,tr:28,va:0.15,rh:55,met:1.2,clo:0.5},
+  fenster:{ta:22,tr:14,va:0.1,rh:45,met:1.2,clo:1.0},
+  sport:{ta:22,tr:22,va:0.3,rh:60,met:3.0,clo:0.5},
+  schule:{ta:21,tr:20,va:0.1,rh:50,met:1.4,clo:0.8},
+  sommer:{ta:32,tr:35,va:0.2,rh:65,met:1.2,clo:0.5},
+};
+function setP(key,btn){
+  const p=PRESETS[key];
+  document.getElementById('s-ta').value=p.ta;
+  document.getElementById('s-tr').value=p.tr;
+  document.getElementById('s-va').value=p.va;
+  document.getElementById('s-rh').value=p.rh;
+  document.getElementById('s-met').value=p.met;
+  document.getElementById('s-clo').value=p.clo;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  calc();
+}
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+calc();
+window.addEventListener('resize',()=>drawCanvas(calcPMV(
+  +document.getElementById('s-ta').value,
+  +document.getElementById('s-tr').value,
+  +document.getElementById('s-va').value,
+  +document.getElementById('s-rh').value,
+  +document.getElementById('s-met').value,
+  +document.getElementById('s-clo').value
+)));
+</script>
+</body>
+</html>
